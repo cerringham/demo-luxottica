@@ -2,16 +2,14 @@ package it.bitrock.demoluxottica.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class Utente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
