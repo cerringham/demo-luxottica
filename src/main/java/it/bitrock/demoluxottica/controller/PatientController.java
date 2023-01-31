@@ -21,4 +21,6 @@ public class PatientController {
         return service.getPatientByStringId(id);
     }
 
+
+
 }
