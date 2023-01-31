@@ -4,9 +4,12 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.r4.model.Patient;
 
+import java.io.IOException;
+import java.io.Writer;
+
 public class Utils {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         // Create a context
         FhirContext ctx = FhirContext.forR4();
@@ -19,7 +22,9 @@ public class Utils {
 
         // Print the output
         String string = ctx.newJsonParser().setPrettyPrint(true).encodeResourceToString(patient);
+        //ctx.newJsonParser().setPrettyPrint(true).encodeResourceToWriter(patient, Writer.nullWriter());
         System.out.println(string);
-
     }
+
+
 }
