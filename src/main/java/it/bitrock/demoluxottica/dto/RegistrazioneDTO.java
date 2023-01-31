@@ -22,17 +22,17 @@ public class RegistrazioneDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Schema(hidden = true)
-    String id = "uno";
+    private String id = "uno";
     @NotNull @NotBlank @Email
-    String username;
+    private String username;
     @NotNull @NotBlank
-    String nome;
+    private String nome;
     @NotNull @NotBlank
-    String cognome;
+    private String cognome;
     @NotNull @NotBlank
-    String email;
+    private String email;
     @Schema(hidden = true)
-    Role Ruolo;
+    private Role Ruolo;
 //    LocalDate dataInizio;
 //    LocalDate dateFine;
 
