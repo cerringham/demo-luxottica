@@ -1,5 +1,8 @@
 package it.bitrock.demoluxottica.model;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +17,8 @@ import java.util.List;
 @AllArgsConstructor
 public class User {
 
-//    @Id
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long Id;
     String nome_utente;
     String password;

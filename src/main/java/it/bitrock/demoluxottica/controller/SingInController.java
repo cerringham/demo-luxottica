@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import it.bitrock.demoluxottica.dto.RegistrazioneDTO;
 import it.bitrock.demoluxottica.model.Role;
 import it.bitrock.demoluxottica.service.SingInService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -22,12 +23,13 @@ public class SingInController {
     SingInService singInService;
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> singIn(@RequestBody RegistrazioneDTO registrazioneDTO){
+    public ResponseEntity<?> singIn(@Valid @RequestBody RegistrazioneDTO registrazioneDTO){
         registrazioneDTO.setRuolo(Role.SUPER_USER);
         log.info("valori: {}, {}", registrazioneDTO.getNome(), registrazioneDTO.getCognome());
         return singInService.singIn(registrazioneDTO);
     }
 
+    //Ho fatto sta cafonata perché non mi prendeva il metodo con la RequestBody =), mo funziona
     @PostMapping(value = "/param")
     public ResponseEntity<?> singIn2(@RequestParam String username,
                                      @RequestParam String nome,
