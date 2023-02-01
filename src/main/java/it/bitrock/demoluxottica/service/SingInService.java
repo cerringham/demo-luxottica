@@ -4,16 +4,16 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import it.bitrock.demoluxottica.dto.RegistrazioneDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.hl7.fhir.r4.model.ContactPoint;
-import org.hl7.fhir.r4.model.HumanName;
-import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.*;
 import org.hl7.fhir.r4.model.codesystems.ContactPointSystem;
+import org.hl7.fhir.r4.model.codesystems.ContactPointUse;
 import org.hl7.fhir.utilities.graphql.StringValue;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
 
 @Service
@@ -34,16 +34,15 @@ public class SingInService {
 //        patient = patientRepository.findByID
 //        Patient patientFind = client.read().resource(Patient.class).withId(id).execute();
 //        }
-
-        List<HumanName> humanNameList =
-                Arrays.asList(new HumanName().setFamily(registrazioneDTO.getNome() + " " + registrazioneDTO.getCognome()));
-        //FIXME capire come settare correttamente l'E-MAIL
-        List<ContactPoint> contactPoints =
-                Arrays.asList(new ContactPoint().setValue(registrazioneDTO.getEmail()));
         Patient patient = new Patient();
-        patient.setName(humanNameList);
-        patient.setTelecom(contactPoints);
-        patient.setId(String.valueOf(registrazioneDTO.getId()));
+        patient.addName(new HumanName()
+                .setFamily(registrazioneDTO.getCognome())
+                .setGiven(Arrays.asList(new StringType(registrazioneDTO.getNome()))));
+        patient.addTelecom(new ContactPoint()
+                .setValue(registrazioneDTO.getEmail())
+                .setSystem(ContactPoint.ContactPointSystem.EMAIL));
+//        patient.setId(String.valueOf(registrazioneDTO.getId()));
+        patient.addIdentifier(new Identifier().setSystem(String.valueOf(registrazioneDTO.getId())));
         log.info("Registration: {}", registrazioneDTO);
         Boolean created =  client.create().resource(patient).execute().getCreated();
         log.info("Created : {}, with ID: {}", created, registrazioneDTO.getId());

@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 public class Utente {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Setter(value = AccessLevel.NONE)
-    private Long id;
+    private String id;
     private String nome_utente;
     private String password;
     @Enumerated(EnumType.STRING)

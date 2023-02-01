@@ -19,10 +19,12 @@ import java.time.LocalDate;
 @ToString
 public class RegistrazioneDTO {
 
+    //FIXME Non auto-genera un ID
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Schema(hidden = true)
-    private String id = "uno";
+    private String id;
+//    private String id = "uno";
     @NotNull @NotBlank @Email
     private String username;
     @NotNull @NotBlank
