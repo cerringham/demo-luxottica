@@ -1,5 +1,6 @@
 package it.bitrock.demoluxottica.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import it.bitrock.demoluxottica.model.Role;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,12 +21,15 @@ import java.time.LocalDate;
 @ToString
 public class RegistrazioneDTO {
 
+    static final String DATE_PATTERN = "dd/MM/yyyy";
+    static final String DATE_TIME_PATTERN = "dd/MM/yyyy HH:mm:ss";
+
     //FIXME Non auto-genera un ID
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Schema(hidden = true)
-    private String id;
-//    private String id = "uno";
+//    private String id;
+    private String id = "1@2#3@4#5@6#7";
     @NotNull @NotBlank @Email
     private String username;
     @NotNull @NotBlank
@@ -33,9 +38,13 @@ public class RegistrazioneDTO {
     private String cognome;
     @NotNull @NotBlank
     private String email;
+    private String password;
     @Schema(hidden = true)
     private Role Ruolo;
-//    LocalDate dataInizio;
-//    LocalDate dateFine;
+    @JsonFormat(pattern = DATE_TIME_PATTERN) @Schema(hidden = true)
+    LocalDateTime inizioSessione = LocalDateTime.now();
+    @JsonFormat(pattern = DATE_PATTERN)
+    LocalDateTime fineSessione = LocalDateTime.of(2023, 10, 11, 00, 00);
+
 
 }
