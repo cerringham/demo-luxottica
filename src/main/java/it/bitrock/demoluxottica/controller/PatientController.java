@@ -16,4 +16,5 @@ public class PatientController {
     public String getPatientByStringId(@PathVariable String id) {
         return service.getPatientByStringId(id);
     }
+
 }
