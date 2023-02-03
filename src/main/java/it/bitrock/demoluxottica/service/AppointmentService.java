@@ -16,8 +16,9 @@ import java.lang.reflect.Field;
 public class AppointmentService {
 
     private FhirContext ctx = FhirContext.forR4();
-    private IGenericClient getClient(){
-        return ctx.newRestfulGenericClient("https://hapi.fhir.org/baseR4");
+    private final String url = "https://hapi.fhir.org/baseR4";
+    private IGenericClient getClient(String url){
+        return ctx.newRestfulGenericClient(url);
     }
 
     public ResponseEntity<?> addAppointment(Appointment appointment){
@@ -25,7 +26,6 @@ public class AppointmentService {
         // Set the relevant details for the appointment
         appointment.setDescription("eye injuries");
         appointment.setStatus(Appointment.AppointmentStatus.BOOKED);
-
 
         Reference patientRef = new Reference();
         //we cannot add an appointment without an exists Patient/id
@@ -41,8 +41,8 @@ public class AppointmentService {
         for (Field field : appointment.getClass().getDeclaredFields()) {
             log.info("field: {}, {}" + field.getName(), field.getClass().getDeclaredFields());
         }
-        boolean created = getClient().create().resource(appointment).execute().getCreated();
-        if(created == true){
+        boolean created = getClient(url).create().resource(appointment).execute().getCreated();
+        if(created){
             return ResponseEntity.ok(ctx.newJsonParser().setPrettyPrint(true).encodeResourceToString(appointment));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
