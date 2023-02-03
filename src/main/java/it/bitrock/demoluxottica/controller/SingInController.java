@@ -2,7 +2,7 @@ package it.bitrock.demoluxottica.controller;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import it.bitrock.demoluxottica.dto.RegistrazioneDTO;
+import it.bitrock.demoluxottica.dto.RegistrationDTO;
 import it.bitrock.demoluxottica.model.Role;
 import it.bitrock.demoluxottica.service.SingInService;
 import jakarta.validation.Valid;
@@ -23,10 +23,10 @@ public class SingInController {
     SingInService singInService;
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> singIn(@Valid @RequestBody RegistrazioneDTO registrazioneDTO){
-        registrazioneDTO.setRuolo(Role.SUPER_USER);
-        log.info("valori: {}, {}", registrazioneDTO.getNome(), registrazioneDTO.getCognome());
-        return singInService.singIn(registrazioneDTO);
+    public ResponseEntity<?> singIn(@Valid @RequestBody RegistrationDTO registrationDTO){
+        registrationDTO.setRole(Role.SUPER_USER);
+        log.info("valori: {}, {}", registrationDTO.getName(), registrationDTO.getSurname());
+        return singInService.singIn(registrationDTO);
     }
 
     //Ho fatto sta cafonata perché non mi prendeva il metodo con la RequestBody =), mo funziona
@@ -36,13 +36,13 @@ public class SingInController {
                                      @RequestParam String cognome,
                                      @RequestParam String email
                                      ){
-        RegistrazioneDTO registrazioneDTO = new RegistrazioneDTO();
-        registrazioneDTO.setRuolo(Role.SUPER_USER);
-        registrazioneDTO.setUsername(username);
-        registrazioneDTO.setNome(nome);
-        registrazioneDTO.setCognome(cognome);
-        registrazioneDTO.setEmail(email);
-        return singInService.singIn(registrazioneDTO);
+        RegistrationDTO registrationDTO = new RegistrationDTO();
+        registrationDTO.setRole(Role.SUPER_USER);
+        registrationDTO.setUsername(username);
+        registrationDTO.setName(nome);
+        registrationDTO.setSurname(cognome);
+        registrationDTO.setEmail(email);
+        return singInService.singIn(registrationDTO);
     }
 
 }

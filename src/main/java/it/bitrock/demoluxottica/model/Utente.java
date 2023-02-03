@@ -2,8 +2,6 @@ package it.bitrock.demoluxottica.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -23,19 +21,19 @@ public class Utente {
     @Setter(value = AccessLevel.NONE)
     private String id;
     private String username;
-    private String nome;
-    private String cognome;
+    private String name;
+    private String surname;
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
-    private Role ruolo;
+    private Role role;
 //    Sede sede;
 //    List<MultipartFile> documenti;
 //    Organizzazione organizzazione;
 //    List<Servizio> servizi;
     @JsonFormat(pattern = DATE_TIME_PATTERN)
-    private LocalDateTime inizioSessione;
+    private LocalDateTime startSession;
     @JsonFormat(pattern = DATE_TIME_PATTERN)
-    private LocalDateTime fineSessione;
+    private LocalDateTime endSession;
 
 }
