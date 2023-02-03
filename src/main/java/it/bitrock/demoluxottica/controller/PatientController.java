@@ -1,24 +1,33 @@
 package it.bitrock.demoluxottica.controller;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
+import it.bitrock.demoluxottica.models.enumerations.FhirContextEnum;
 import it.bitrock.demoluxottica.service.PatientService;
-import jakarta.websocket.server.PathParam;
+import lombok.extern.slf4j.Slf4j;
+import org.hl7.fhir.r4.model.Patient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@CrossOrigin(origins = "*")
+@Slf4j
 @RestController
-@RequestMapping("/paziente")
-@Tag(name = "Patient Controller", description = "Manage of the patient")
+@RequestMapping("/patient")
 public class PatientController {
 
     @Autowired
     PatientService service;
 
-    @GetMapping("/{id}")
-    public String getPatientByStringId(@PathVariable String id) {
-        return service.getPatientByStringId(id);
+    @GetMapping("/all")
+    public String getAllPatient(){
+        log.info("---------------------------     Called getAllPatient Endpoint     ---------------------------");
+        return service.getAllPatient().toString();
     }
 
-
+    @GetMapping("/getById/{id}")
+    public String getPatientByStringId(@PathVariable String id) {
+        log.info("---------------------------     Called getPatientByStringId Endpoint     ---------------------------");
+        return service.getPatientByStringId(id, FhirContextEnum.R4);
+    }
 
 }

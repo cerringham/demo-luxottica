@@ -1,27 +1,32 @@
 package it.bitrock.demoluxottica.service;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
+import it.bitrock.demoluxottica.config.FhirContextSettings;
+import it.bitrock.demoluxottica.models.enumerations.FhirContextEnum;
+import it.bitrock.demoluxottica.utils.FhirUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.hl7.fhir.r4.model.DiagnosticReport;
 import org.hl7.fhir.r4.model.Patient;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class PatientService {
 
-    public String getPatientByStringId(String id) {
+    public List<Patient> getAllPatient(){
+        return FhirUtils.getStreamOfAll(Patient.class)
+                .map(bundleEntryComponent -> (Patient) bundleEntryComponent.getResource())
+                .collect(Collectors.toList());
+    }
+
+    public String getPatientByStringId(String id, FhirContextEnum fhirContext) {
         if(id == null || id.isEmpty()) {
             return "id cannot be blank or null";
         }
-        // Create a context
-        FhirContext ctx = FhirContext.forR4();
-
-        // Create a client
-        IGenericClient client = ctx.newRestfulGenericClient("https://hapi.fhir.org/baseR4");
-
-        // Read a patient with the given ID
-        Patient patient = client.read().resource(Patient.class).withId(id).execute();
-
-       return ctx.newJsonParser().setPrettyPrint(true).encodeResourceToString(patient);
+        Patient patient = FhirContextSettings.getResource(Patient.class, fhirContext).withId(id).execute();
+       return FhirContextSettings.toString(patient);
     }
+
 }
