@@ -13,22 +13,19 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FhirContextSettings {
     public static FhirContext fhirContext;
-    public static IGenericClient client;
+    public static IGenericClient r4_client;
+    public static IGenericClient r5_client;
 
-    public final static String CLIENT_URL = "https://hapi.fhir.org/baseR4";
+    public final static String R4_CLIENT_URL = "https://hapi.fhir.org/baseR4";
+    public final static String R5_CLIENT_URL = "https://hapi.fhir.org/baseR5";
     public FhirContextSettings(){
         FhirContextEnum context = FhirContextEnum.R4;
         switch (context){
             case R4 -> fhirContext = FhirContext.forR4();
             case R5 -> fhirContext = FhirContext.forR5();
         }
-/*        if(clientURL != null){
-            client = fhirContext.newRestfulGenericClient(clientURL);
-        } else{
-            client = fhirContext.newRestfulGenericClient(CLIENT_URL);
-        }*/
-
-        client = fhirContext.newRestfulGenericClient(CLIENT_URL);
+        r4_client = fhirContext.newRestfulGenericClient(R4_CLIENT_URL);
+        r5_client = fhirContext.newRestfulGenericClient(R5_CLIENT_URL);
     }
 
     public static IParser getParser(){
@@ -39,7 +36,7 @@ public class FhirContextSettings {
         return FhirContextSettings.getParser().encodeResourceToString(iBaseResource);
     }
 
-    public static <T extends IBaseResource> IReadTyped<T> getResource(Class<T> resourceClass){
-        return (IReadTyped<T>) FhirContextSettings.client.read().resource(resourceClass);
+    public static <T extends IBaseResource> IReadTyped<T> getResource(Class<T> resourceClass, FhirContextEnum fhirContextEnum){
+        return (IReadTyped<T>) FhirContextSettings.r4_client.read().resource(resourceClass);
     }
 }
