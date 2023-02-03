@@ -11,40 +11,40 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public class RegistrazioneDTO {
+public class RegistrationDTO {
 
     static final String DATE_PATTERN = "dd/MM/yyyy";
     static final String DATE_TIME_PATTERN = "dd/MM/yyyy HH:mm:ss";
 
     //FIXME Non auto-genera un ID
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Schema(hidden = true)
-//    private String id;
-    private String id = "1@2#3@4#5@6#7";
+    private UUID id;
     @NotNull @NotBlank @Email
     private String username;
     @NotNull @NotBlank
-    private String nome;
+    private String name;
     @NotNull @NotBlank
-    private String cognome;
+    private String surname;
     @NotNull @NotBlank
     private String email;
     private String password;
     @Schema(hidden = true)
-    private Role Ruolo;
+    private Role role;
     @JsonFormat(pattern = DATE_TIME_PATTERN) @Schema(hidden = true)
-    LocalDateTime inizioSessione = LocalDateTime.now();
+    LocalDateTime startSession = LocalDateTime.now();
     @JsonFormat(pattern = DATE_PATTERN)
-    LocalDateTime fineSessione = LocalDateTime.of(2023, 10, 11, 00, 00);
+    LocalDateTime endSession = LocalDateTime.of(2023, 10, 11, 00, 00);
 
+    {
+        this.id = UUID.randomUUID();
+    }
 
 }
