@@ -21,4 +21,9 @@ public class AppointmentController {
         return service.addAppointment(appointment);
     }
 
+    @GetMapping("/create")
+    public ResponseEntity<?> addAppointment(){
+        return service.addAppointment();
+    }
+
 }
