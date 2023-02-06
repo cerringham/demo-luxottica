@@ -12,7 +12,7 @@ public class DiagnosticReportController {
     @Autowired
     DiagnosticReportService service;
 
-    //1129
+    // testId 1129
     @GetMapping("/diagnostic-report/{id}")
     public String getDiagnosticReportById(@PathVariable String id) {
         return service.getDiagnosticReportById(id);

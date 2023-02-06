@@ -1,13 +1,11 @@
 package it.bitrock.demoluxottica.config;
 
-
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.gclient.IReadTyped;
 import it.bitrock.demoluxottica.models.enumerations.FhirContextEnum;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.Patient;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration

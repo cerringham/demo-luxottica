@@ -1,4 +1,4 @@
-package it.bitrock.demoluxottica.dto;
+package it.bitrock.demoluxottica.models.dto;
 
 import lombok.*;
 
