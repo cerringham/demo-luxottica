@@ -1,6 +1,5 @@
 package it.bitrock.demoluxottica.controller;
 
-import it.bitrock.demoluxottica.service.AppointmentService;
 import lombok.extern.slf4j.Slf4j;
 import org.hl7.fhir.r4.model.Appointment;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class AppointmentController {
 
-    @Autowired
-    AppointmentService service;
+/*    @Autowired
+    AppointmentService2 service;
 
     @PostMapping("/create")
     public ResponseEntity<?> addAppointment(@ModelAttribute Appointment appointment){
@@ -23,6 +22,6 @@ public class AppointmentController {
     @GetMapping("/create")
     public ResponseEntity<?> addAppointment(){
         return service.addAppointment();
-    }
+    }*/
 
 }

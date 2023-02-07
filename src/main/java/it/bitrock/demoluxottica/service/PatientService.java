@@ -9,6 +9,7 @@ import org.hl7.fhir.r4.model.Patient;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,12 +22,11 @@ public class PatientService {
                 .collect(Collectors.toList());
     }
 
-    public String getPatientByStringId(String id, FhirContextEnum fhirContext) {
+    public Optional<Patient> getPatientByStringId(String id, FhirContextEnum fhirContext) {
         if(id == null || id.isEmpty()) {
-            return "id cannot be blank or null";
+            return Optional.empty();
         }
-        Patient patient = FhirContextSettings.getResource(Patient.class, fhirContext).withId(id).execute();
-       return FhirContextSettings.toString(patient);
+        return Optional.of(FhirContextSettings.getResource(Patient.class, fhirContext).withId(id).execute());
     }
 
     /*
