@@ -15,17 +15,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class AppointmentService {
-
-//    private FhirContext ctx = FhirContext.forR4();
-//    private final String url = "https://hapi.fhir.org/baseR4";
-//    private IGenericClient getClient(String url){
-//        return ctx.newRestfulGenericClient(url);
-//    }
 
     public ResponseEntity<?> addAppointment(AppointmentDTO appointmentDTO){
         Appointment appointment = new Appointment();

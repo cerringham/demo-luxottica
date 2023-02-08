@@ -1,7 +1,5 @@
 package it.bitrock.demoluxottica.service;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
 import com.github.javafaker.Faker;
 import it.bitrock.demoluxottica.config.FhirContextSettings;
 import it.bitrock.demoluxottica.models.enumerations.FhirContextEnum;
