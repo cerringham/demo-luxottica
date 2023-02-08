@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,26 +25,38 @@ public class AppointmentService {
 
     public ResponseEntity<?> addAppointment(AppointmentDTO appointmentDTO){
         Appointment appointment = new Appointment();
-
         appointment.setId(appointmentDTO.getId());
-        appointment.setMeta(new Meta()
-                .setVersionId(version)
-                .setLastUpdated(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())));
-
+        LocalDateTime now = LocalDateTime.now();
+        appointment.setMeta(
+                new Meta()
+                        .setVersionId("1")
+                        .setLastUpdated(Date.from(now.atZone(ZoneId.systemDefault()).toInstant())));
         appointment.setDescription(appointmentDTO.getDescription());
         appointment.setStatus(Appointment.AppointmentStatus.BOOKED);
 
         appointment.setStart(Date.from(appointmentDTO.getStart().atZone(ZoneId.systemDefault()).toInstant()));
         appointment.setEnd(Date.from(appointmentDTO.getEnd().atZone(ZoneId.systemDefault()).toInstant()));
 
-        addReference(appointment, appointmentDTO.getPatientID());
+        Reference patientRef = new Reference();
+        //we cannot add an appointment without an exists Patient/id
+        patientRef.setReference(appointmentDTO.getPatientID());
+        Appointment.AppointmentParticipantComponent patientAppointment =
+                new Appointment.AppointmentParticipantComponent();
+        patientAppointment
+                .setActor(patientRef)
+                .setStatus(Appointment.ParticipationStatus.ACCEPTED);
+        appointment.addParticipant(patientAppointment);
 
-        addParticipant(appointment, appointmentDTO.getParticipant());
+        for(String participant : appointmentDTO.getParticipant()) {
+            appointment.addParticipant(new Appointment.AppointmentParticipantComponent()
+                    .setActor(new Reference().setDisplay(participant))
+                    .setStatus(Appointment.ParticipationStatus.ACCEPTED));
+        }
 
+        log.info("  \nAppointment: id {},\nParticipant {}", appointment.getId(),
+                appointment.getParticipant().stream().map(p -> p.getActor()));
         boolean created = FhirContextSettings.r4_client.create().resource(appointment).execute().getCreated();
         if(created){
-            log.info("\nAppointment: id {},\nParticipant {}", appointment.getId(),
-                    appointment.getParticipant().stream().map(p -> p.getActor()));
             return ResponseEntity.ok(FhirContextSettings.getParser().encodeResourceToString(appointment));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -54,11 +65,13 @@ public class AppointmentService {
 
     public ResponseEntity<?> addAppointment() {
         Appointment appointment = new Appointment();
-
+        // Set the relevant details for the appointment
         appointment.setId("2345-3455-5555-8966");
-        appointment.setMeta(new Meta()
-                .setVersionId(version)
-                .setLastUpdated(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())));
+        LocalDateTime now = LocalDateTime.now();
+        appointment.setMeta(
+                new Meta()
+                        .setVersionId("1")
+                        .setLastUpdated(Date.from(now.atZone(ZoneId.systemDefault()).toInstant())));
         appointment.setDescription("eye injuries");
         appointment.setStatus(Appointment.AppointmentStatus.BOOKED);
 
@@ -67,37 +80,30 @@ public class AppointmentService {
         LocalDateTime end = LocalDateTime.of(2023, 10, 22, 12, 10);
         appointment.setEnd(Date.from(end.atZone(ZoneId.systemDefault()).toInstant()));
 
-        addReference(appointment, "Patient/example");
-        addParticipant(appointment, Arrays.asList("Dr. Doe"));
+        Reference patientRef = new Reference();
+        //we cannot add an appointment without an exists Patient/id
+        patientRef.setReference("Patient/example");
+        Appointment.AppointmentParticipantComponent patientAppointment =
+                new Appointment.AppointmentParticipantComponent();
+        patientAppointment.setActor(patientRef)
+                .setStatus(Appointment.ParticipationStatus.ACCEPTED);
+        appointment.addParticipant(patientAppointment);
+        appointment.addParticipant(new Appointment.AppointmentParticipantComponent()
+                .setActor(new Reference()
+                        .setDisplay("Dr Doe"))
+                .setStatus(Appointment.ParticipationStatus.ACCEPTED));
+        log.info("Appointment: {}", appointment);
 
+        for (Field field : appointment.getClass().getDeclaredFields()) {
+            log.info("field: {}, {}" + field.getName(), Arrays.stream(field.getClass().getDeclaredFields()).findAny());
+        }
+
+//        boolean created = getClient(url).create().resource(appointment).execute().getCreated();
         boolean created = FhirContextSettings.r4_client.create().resource(appointment).execute().getCreated();
         if(created){
-            log.info("\nAppointment: id {},\nParticipant {}", appointment.getId(),
-                    appointment.getParticipant().stream().map(p -> p.getActor()));
             return ResponseEntity.ok(FhirContextSettings.getParser().encodeResourceToString(appointment));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
-
-    private void addReference(Appointment appointment, String patientId){
-        Reference patientRef = new Reference();
-        //we cannot add an appointment without an exists Patient/id
-        patientRef.setReference(patientId);
-        Appointment.AppointmentParticipantComponent patientAppointment =
-                new Appointment.AppointmentParticipantComponent();
-        patientAppointment
-                .setActor(patientRef)
-                .setStatus(Appointment.ParticipationStatus.ACCEPTED);
-        appointment.addParticipant(patientAppointment);
-//        return appointment;
-    }
-
-    private void addParticipant(Appointment appointment, List<String> participants) {
-        for(String participant : participants) {
-            appointment.addParticipant(new Appointment.AppointmentParticipantComponent()
-                    .setActor(new Reference().setDisplay(participant))
-                    .setStatus(Appointment.ParticipationStatus.ACCEPTED));
         }
     }
 
