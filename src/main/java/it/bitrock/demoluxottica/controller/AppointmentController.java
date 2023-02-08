@@ -1,5 +1,6 @@
 package it.bitrock.demoluxottica.controller;
 
+import it.bitrock.demoluxottica.models.dto.AppointmentDTO;
 import it.bitrock.demoluxottica.service.AppointmentService;
 import lombok.extern.slf4j.Slf4j;
 import org.hl7.fhir.r4.model.Appointment;
