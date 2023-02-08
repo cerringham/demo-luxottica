@@ -1,72 +1,80 @@
 package it.bitrock.demoluxottica.service;
 
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
+import com.github.javafaker.Faker;
 import it.bitrock.demoluxottica.config.FhirContextSettings;
 import it.bitrock.demoluxottica.models.enumerations.FhirContextEnum;
 import it.bitrock.demoluxottica.utils.FhirUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.hl7.fhir.r4.model.DiagnosticReport;
-import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class PatientService {
 
-    public List<Patient> getAllPatient(){
+    //    FhirContext ctx = FhirContext.forR4();
+//        IGenericClient client = ctx.newRestfulGenericClient("https://hapi.fhir.org/baseR4");
+    private String urlTreatmentPeriod = "http://example.org/fhir/StructureDefinition/patient-treatmentPeriod";
+
+    public List<Patient> getAllPatient() {
         return FhirUtils.getStreamOfAll(Patient.class)
                 .map(bundleEntryComponent -> (Patient) bundleEntryComponent.getResource())
                 .collect(Collectors.toList());
     }
 
     public String getPatientByStringId(String id, FhirContextEnum fhirContext) {
-        if(id == null || id.isEmpty()) {
+        if (id == null || id.isEmpty()) {
             return "id cannot be blank or null";
         }
         Patient patient = FhirContextSettings.getResource(Patient.class, fhirContext).withId(id).execute();
-       return FhirContextSettings.toString(patient);
+        return FhirContextSettings.toString(patient);
     }
 
-    /*
-     public ResponseEntity<?> singIn(RegistrationDTO registrationDTO){
-        FhirContext ctx = FhirContext.forR4();
-        // Create a client
-        IGenericClient client = ctx.newRestfulGenericClient("https://hapi.fhir.org/baseR4");
+    public ResponseEntity<?> addPatient() {
 
-        Utente utente = new Utente();
-        BeanUtils.copyProperties(registrationDTO, utente);
         Patient patient = new Patient();
 
-        patient.setId(String.valueOf(registrationDTO.getId()));
+        patient.setId(String.valueOf(UUID.randomUUID()));
         patient.addIdentifier(new Identifier()
-                .setSystem(String.valueOf(registrationDTO.getId()))
-                .setValue("12345"));
+                .setSystem(String.valueOf(String.valueOf(UUID.randomUUID())))
+                .setValue(String.valueOf(new Random().nextInt())));
 
         patient.addName(new HumanName()
-                .setFamily(registrationDTO.getSurname())
-                .setGiven(Arrays.asList(new StringType(registrationDTO.getName()))));
+                .setFamily(new Faker().name().lastName())
+                .setGiven(Arrays.asList(new StringType(new Faker().name().firstName()))));
 
         patient.addTelecom(new ContactPoint()
-                .setValue(registrationDTO.getEmail())
+                .setValue(new Faker().expression("essempio@email.com"))
                 .setSystem(ContactPoint.ContactPointSystem.EMAIL));
 
-        Date dataFine = Date.from(registrationDTO.getEndSession().atZone(ZoneId.systemDefault()).toInstant());
-        Date dataInizio = Date.from(registrationDTO.getStartSession().atZone(ZoneId.systemDefault()).toInstant());
-        patient.addExtension().setUrl("http://example.org/fhir/StructureDefinition/patient-treatmentPeriod")
-                .setValue(new Period().setStart(dataInizio).setEnd(dataFine));
+        Random r = new Random();
+        long t1 = System.currentTimeMillis() + r.nextInt();
+        long t2 = t1 + 2 * 60 * 1000 + r.nextInt(60 * 1000) + 1;
+        Date start = new Date(t1);
+        Date end = new Date(t2);
+        patient.addExtension()
+                .setUrl(urlTreatmentPeriod)
+                .setValue(new Period()
+                        .setStart(start)
+                        .setEnd(end));
 
-        log.info("Registration: {}", registrationDTO);
-        Boolean created =  client.create().resource(patient).execute().getCreated();
-        Utente u = utenteRepository.save(utente);
-        log.info("Created in Fhir: {}, with ID: {}", created, registrationDTO.getId());
-        log.info("Created in DB: {}, with ID: {}", u, u.getId());
-        if(created == true) {
-            return ResponseEntity.ok(ctx.newJsonParser().setPrettyPrint(true).encodeResourceToString(patient));
+        log.info("Patient: {}", patient);
+//        Boolean created =  client.create().resource(patient).execute().getCreated();
+        Boolean created = FhirContextSettings.r4_client.create().resource(patient).execute().getCreated();
+        if (created == true) {
+            log.info("Created in Fhir: {}, with ID: {}", true, patient.getId());
+            return ResponseEntity.ok(FhirContextSettings.getParser().encodeResourceToString(patient));
         } else {
+            log.info("Created in Fhir: {}, with ID: {}", false, patient.getId());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
-     */
+
 }
