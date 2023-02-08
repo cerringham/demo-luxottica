@@ -20,53 +20,53 @@ import org.springframework.security.web.authentication.session.NullAuthenticated
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
-@KeycloakConfiguration
-@EnableWebSecurity
-@ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)
-public class WebSecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter {
-    /**
-     * Registers the KeycloakAuthenticationProvider with the authentication manager.
-     */
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
-        keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(new SimpleAuthorityMapper());
-        auth.authenticationProvider(keycloakAuthenticationProvider);
-    }
-
-    @Bean
-    public KeycloakConfigResolver keycloakConfigResolver() {
-        return new KeycloakSpringBootConfigResolver();
-    }
-
-    /**
-     * Defines the session authentication strategy.
-     */
-    @Bean
-    @Override
-    protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
-        return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception
-    {
-        super.configure(http);
-        http
-                .authorizeHttpRequests()
-                .requestMatchers("/products*")
-                .hasRole("user")
-                .anyRequest().permitAll();
-    }
-
-    @Override
-    public void init(WebSecurity builder) throws Exception {
-
-    }
-
-    @Override
-    public void configure(WebSecurity builder) throws Exception {
-
-    }
+//@KeycloakConfiguration
+//@EnableWebSecurity
+//@ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)
+public class WebSecurityConfiguration /*extends KeycloakWebSecurityConfigurerAdapter */{
+//    /**
+//     * Registers the KeycloakAuthenticationProvider with the authentication manager.
+//     */
+//    @Autowired
+//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//        KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
+//        keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(new SimpleAuthorityMapper());
+//        auth.authenticationProvider(keycloakAuthenticationProvider);
+//    }
+//
+//    @Bean
+//    public KeycloakConfigResolver keycloakConfigResolver() {
+//        return new KeycloakSpringBootConfigResolver();
+//    }
+//
+//    /**
+//     * Defines the session authentication strategy.
+//     */
+//    @Bean
+//    @Override
+//    protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
+//        return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
+//    }
+//
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception
+//    {
+//        super.configure(http);
+//        http
+//                .authorizeHttpRequests()
+//                .requestMatchers("/products*")
+//                .hasRole("user")
+//                .anyRequest().permitAll();
+//    }
+//
+//    @Override
+//    public void init(WebSecurity builder) throws Exception {
+//
+//    }
+//
+//    @Override
+//    public void configure(WebSecurity builder) throws Exception {
+//
+//    }
 }
 
