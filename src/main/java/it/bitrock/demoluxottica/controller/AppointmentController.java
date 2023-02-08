@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/appointment")
 @Slf4j
@@ -21,7 +22,6 @@ public class AppointmentController {
         log.info("controller");
         return service.addAppointment(appointmentDTO);
     }
-
 
     @GetMapping("/create")
     public ResponseEntity<?> addAppointment(){
