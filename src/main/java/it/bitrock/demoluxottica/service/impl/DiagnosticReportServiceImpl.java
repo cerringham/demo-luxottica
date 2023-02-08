@@ -1,6 +1,5 @@
 package it.bitrock.demoluxottica.service.impl;
 
-
 import it.bitrock.demoluxottica.config.FhirContextSettings;
 import it.bitrock.demoluxottica.models.enumerations.FhirContextEnum;
 import it.bitrock.demoluxottica.service.DiagnosticReportService;
@@ -8,8 +7,10 @@ import it.bitrock.demoluxottica.service.EncounterService;
 import it.bitrock.demoluxottica.service.FhirService;
 import it.bitrock.demoluxottica.service.PatientService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.EndianUtils;
-import org.hl7.fhir.r4.model.*;
+import org.hl7.fhir.r4.model.DiagnosticReport;
+import org.hl7.fhir.r4.model.Encounter;
+import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.Reference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

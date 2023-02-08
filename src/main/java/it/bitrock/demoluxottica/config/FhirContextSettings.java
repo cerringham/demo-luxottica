@@ -36,6 +36,7 @@ public class FhirContextSettings {
     public static String toString(IBaseResource iBaseResource){
         return FhirContextSettings.getParser().encodeResourceToString(iBaseResource);
     }
+
     public static <T extends IBaseResource> String optionalToString(Class<T> resourceClass, Optional<T> iBaseResource){
         return null;
     }

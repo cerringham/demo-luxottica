@@ -2,21 +2,15 @@ package it.bitrock.demoluxottica.controller;
 
 import it.bitrock.demoluxottica.config.FhirContextSettings;
 import it.bitrock.demoluxottica.service.DiagnosticReportService;
-import it.bitrock.demoluxottica.service.FhirService;
-import it.bitrock.demoluxottica.utils.FhirUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.hl7.fhir.r4.model.DiagnosticReport;
-import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Reference;
-import org.hl7.fhir.r4.model.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -73,7 +67,6 @@ public class DiagnosticReportController {
         return ResponseEntity.status(404).build();
     }
 
-    // HTTP 404 Not Found: HAPI-0935: Resource with ID 1129 exists but it is not of type Encounter, found resource of type DiagnosticReport
     @GetMapping("/{id}/encounter")
     public ResponseEntity<String>  getEncounterByDiagnosticReportId(@PathVariable String id) {
         if(service.getEncounterByDiagnosticReportId(id).isPresent()){
@@ -85,7 +78,6 @@ public class DiagnosticReportController {
         return ResponseEntity.status(404).build();
     }
 
-    //java.lang.IllegalStateException: Cannot call sendError() after the response has been committed
     @GetMapping("/{id}/performer")
     public ResponseEntity<String> getPerformerByDiagnosticReportId(@PathVariable String id) {
         Optional<List<Reference>> performerList = service.getPerformerByDiagnosticReportId(id);
