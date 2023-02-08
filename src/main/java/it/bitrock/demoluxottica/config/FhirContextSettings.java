@@ -6,7 +6,10 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.gclient.IReadTyped;
 import it.bitrock.demoluxottica.models.enumerations.FhirContextEnum;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.Resource;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Optional;
 
 @Configuration
 public class FhirContextSettings {
@@ -32,6 +35,10 @@ public class FhirContextSettings {
 
     public static String toString(IBaseResource iBaseResource){
         return FhirContextSettings.getParser().encodeResourceToString(iBaseResource);
+    }
+
+    public static <T extends IBaseResource> String optionalToString(Class<T> resourceClass, Optional<T> iBaseResource){
+        return null;
     }
 
     public static <T extends IBaseResource> IReadTyped<T> getResource(Class<T> resourceClass, FhirContextEnum fhirContextEnum){
