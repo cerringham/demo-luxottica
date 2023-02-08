@@ -37,7 +37,7 @@ public class FhirContextSettings {
         return FhirContextSettings.getParser().encodeResourceToString(iBaseResource);
     }
     public static <T extends IBaseResource> String optionalToString(Class<T> resourceClass, Optional<T> iBaseResource){
-        return FhirContextSettings.getParser().encodeResourceToString((resourceClass) iBaseResource.get());
+        return null;
     }
 
     public static <T extends IBaseResource> IReadTyped<T> getResource(Class<T> resourceClass, FhirContextEnum fhirContextEnum){

@@ -2,50 +2,109 @@ package it.bitrock.demoluxottica.controller;
 
 import it.bitrock.demoluxottica.config.FhirContextSettings;
 import it.bitrock.demoluxottica.service.DiagnosticReportService;
+import it.bitrock.demoluxottica.service.FhirService;
+import it.bitrock.demoluxottica.utils.FhirUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.hl7.fhir.r4.model.DiagnosticReport;
+import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Slf4j
 @RestController
+@RequestMapping(value = "/diagnostic-report")
 public class DiagnosticReportController {
 
     @Autowired
-    DiagnosticReportService  service;
+    DiagnosticReportService service;
+
+    @GetMapping
+    public ResponseEntity<String> getAllDiagnosticReports() {
+        Optional<List<DiagnosticReport>> diagnosticReports = service.getAllDiagnosticReports();
+        if(diagnosticReports.isPresent()){
+            return ResponseEntity
+                    .ok()
+                    .body(diagnosticReports.get().toString());
+        }
+        return ResponseEntity.status(404).build();
+    }
 
     // testId 1129
-    @GetMapping("/diagnostic-report/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<String> getDiagnosticReportById(@PathVariable String id) {
         if(service.getDiagnosticReportById(id).isPresent()){
             return ResponseEntity
                     .ok()
                     .body(FhirContextSettings
-                            .optionalToString(service.getDiagnosticReportById(id)));
+                            .toString(service.getDiagnosticReportById(id).get()));
         }
         return ResponseEntity.status(404).build();
     }
 
-    @GetMapping("/diagnostic-report/{id}/patient")
-    public String getPatientByDiagnosticReportId(@PathVariable String id) {
-        return service.getPatientByDiagnosticReportId(id).toString();
+    @PostMapping
+    public ResponseEntity<String> saveDiagnosticReport(@PathVariable String id) {
+        if(service.getDiagnosticReportById(id).isPresent()){
+            return ResponseEntity
+                    .ok()
+                    .body(FhirContextSettings
+                            .toString(service.getDiagnosticReportById(id).get()));
+        }
+        return ResponseEntity.status(404).build();
     }
 
-    @GetMapping("/diagnostic-report/{id}/encounter")
-    public String getEncounterByDiagnosticReportId(@PathVariable String id) {
-        return service.getEncounterByDiagnosticReportId(id).toString();
+
+
+    @GetMapping("/{id}/patient")
+    public ResponseEntity<String>  getPatientByDiagnosticReportId(@PathVariable String id) {
+        if(service.getPatientByDiagnosticReportId(id).isPresent()){
+            return ResponseEntity
+                    .ok()
+                    .body(FhirContextSettings
+                            .toString(service.getPatientByDiagnosticReportId(id).get()));
+        }
+        return ResponseEntity.status(404).build();
     }
 
-    @GetMapping("/diagnostic-report/{id}/performer")
-    public String getPerformerByDiagnosticReportId(@PathVariable String id) {
-        return service.getPerformerByDiagnosticReportId(id).toString();
+    // HTTP 404 Not Found: HAPI-0935: Resource with ID 1129 exists but it is not of type Encounter, found resource of type DiagnosticReport
+    @GetMapping("/{id}/encounter")
+    public ResponseEntity<String>  getEncounterByDiagnosticReportId(@PathVariable String id) {
+        if(service.getEncounterByDiagnosticReportId(id).isPresent()){
+            return ResponseEntity
+                    .ok()
+                    .body(FhirContextSettings
+                            .toString(service.getEncounterByDiagnosticReportId(id).get()));
+        }
+        return ResponseEntity.status(404).build();
     }
 
-    @GetMapping("/diagnostic-report/{id}/result")
-    public String getResultByDiagnosticReportId(@PathVariable String id) {
-        return service.getResultByDiagnosticReportId(id).toString();
+    //java.lang.IllegalStateException: Cannot call sendError() after the response has been committed
+    @GetMapping("/{id}/performer")
+    public ResponseEntity<String> getPerformerByDiagnosticReportId(@PathVariable String id) {
+        Optional<List<Reference>> performerList = service.getPerformerByDiagnosticReportId(id);
+        if(performerList.isPresent()){
+            return ResponseEntity
+                    .ok()
+                    .body(performerList.get().toString());
+        }
+        return ResponseEntity.status(404).build();
+    }
+
+    @GetMapping("/{id}/result")
+    public ResponseEntity<String>  getResultByDiagnosticReportId(@PathVariable String id) {
+        Optional<List<Reference>> resultReferenceList = service.getResultByDiagnosticReportId(id);
+        if(resultReferenceList.isPresent()){
+            return ResponseEntity
+                    .ok()
+                    .body(resultReferenceList.toString());
+        }
+        return ResponseEntity.status(404).build();
     }
 }

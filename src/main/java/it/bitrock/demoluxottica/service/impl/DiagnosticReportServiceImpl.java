@@ -5,23 +5,38 @@ import it.bitrock.demoluxottica.config.FhirContextSettings;
 import it.bitrock.demoluxottica.models.enumerations.FhirContextEnum;
 import it.bitrock.demoluxottica.service.DiagnosticReportService;
 import it.bitrock.demoluxottica.service.EncounterService;
+import it.bitrock.demoluxottica.service.FhirService;
 import it.bitrock.demoluxottica.service.PatientService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.EndianUtils;
 import org.hl7.fhir.r4.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Service
 @Slf4j
-
+@Service
 public class DiagnosticReportServiceImpl implements DiagnosticReportService {
     @Autowired
     PatientService patientService;
     @Autowired
     EncounterService encounterService;
+    @Autowired
+    FhirService fhirService;
+
+    public Optional<List<DiagnosticReport>> getAllDiagnosticReports() {
+        List<DiagnosticReport> testList = fhirService.getStreamOfAll(DiagnosticReport.class)
+                .map(bundleEntryComponent -> (DiagnosticReport) bundleEntryComponent.getResource())
+                .collect(Collectors.toList());
+        log.info("Test list: " + testList.toString());
+        return Optional.of(fhirService.getStreamOfAll(DiagnosticReport.class)
+                .map(bundleEntryComponent -> (DiagnosticReport) bundleEntryComponent.getResource())
+                .collect(Collectors.toList()));
+    }
+
     public Optional<DiagnosticReport> getDiagnosticReportById(String id) {
         if(id == null || id.isEmpty()) {
             return Optional.empty();
@@ -49,10 +64,10 @@ public class DiagnosticReportServiceImpl implements DiagnosticReportService {
             return Optional.empty();
         }
         String encounterId  = FhirContextSettings
-                .getResource(Encounter.class, FhirContextEnum.R4)
+                .getResource(DiagnosticReport.class, FhirContextEnum.R4)
                 .withId(diagnosticReportId)
                 .execute()
-                .getSubject()
+                .getEncounter()
                 .getReference()
                 .toString()
                 .replace("Encounter/", "");
