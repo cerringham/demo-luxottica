@@ -1,3 +1,4 @@
+/*
 package it.bitrock.demoluxottica.security;
 
 import org.keycloak.adapters.KeycloakConfigResolver;
@@ -24,9 +25,11 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @EnableWebSecurity
 @ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)
 public class WebSecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter {
-    /**
+    */
+/**
      * Registers the KeycloakAuthenticationProvider with the authentication manager.
-     */
+     *//*
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
@@ -39,9 +42,11 @@ public class WebSecurityConfiguration extends KeycloakWebSecurityConfigurerAdapt
         return new KeycloakSpringBootConfigResolver();
     }
 
-    /**
+    */
+/**
      * Defines the session authentication strategy.
-     */
+     *//*
+
     @Bean
     @Override
     protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
@@ -70,3 +75,4 @@ public class WebSecurityConfiguration extends KeycloakWebSecurityConfigurerAdapt
     }
 }
 
+*/

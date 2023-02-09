@@ -1,5 +1,6 @@
 package it.bitrock.demoluxottica.service;
 
+import it.bitrock.demoluxottica.models.dto.DiagnosticReportDTO;
 import org.hl7.fhir.r4.model.*;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface DiagnosticReportService {
     public Optional<Encounter> getEncounterByDiagnosticReportId(String id);
     public Optional<List<Reference>>  getPerformerByDiagnosticReportId(String id);
     public Optional<List<Reference>> getResultByDiagnosticReportId(String id);
+    public Optional<DiagnosticReportDTO> saveDiagnosticReport(DiagnosticReport diagnosticReport);
+
 }

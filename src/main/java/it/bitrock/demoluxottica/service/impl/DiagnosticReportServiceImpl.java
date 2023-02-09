@@ -1,7 +1,9 @@
 package it.bitrock.demoluxottica.service.impl;
 
 import it.bitrock.demoluxottica.config.FhirContextSettings;
+import it.bitrock.demoluxottica.models.dto.DiagnosticReportDTO;
 import it.bitrock.demoluxottica.models.enumerations.FhirContextEnum;
+import it.bitrock.demoluxottica.repository.DiagnosticReportRepository;
 import it.bitrock.demoluxottica.service.DiagnosticReportService;
 import it.bitrock.demoluxottica.service.EncounterService;
 import it.bitrock.demoluxottica.service.FhirService;
@@ -27,6 +29,16 @@ public class DiagnosticReportServiceImpl implements DiagnosticReportService {
     EncounterService encounterService;
     @Autowired
     FhirService fhirService;
+
+    @Autowired
+    DiagnosticReportRepository<DiagnosticReportDTO> diagnosticReportRepository;
+
+    @Override
+    public Optional<DiagnosticReportDTO> saveDiagnosticReport(DiagnosticReport diagnosticReport) {
+        DiagnosticReportDTO diagnosticReportDTO = new DiagnosticReportDTO(diagnosticReport);
+
+        return Optional.of(diagnosticReportRepository.save(diagnosticReportDTO));
+    }
 
     public Optional<List<DiagnosticReport>> getAllDiagnosticReports() {
         List<DiagnosticReport> testList = fhirService.getStreamOfAll(DiagnosticReport.class)

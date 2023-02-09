@@ -5,7 +5,19 @@ volumes:
     driver: local
 
 services:
+#  app:
+#    build:
+#      context: .
+#    container_name: app
+#    depends_on:
+#      - db
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
+#      - SPRING_DATASOURCE_USERNAME=compose-postgres
+#      - SPRING_DATASOURCE_PASSWORD=compose-postgres
+#      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
   postgres:
+    container_name: postgres_db
     image: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -13,6 +25,8 @@ services:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: password
+    ports:
+      - 5434:5432
   keycloak:
     image: quay.io/keycloak/keycloak:legacy
     environment:
@@ -29,6 +43,6 @@ services:
       # It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
       #JDBC_PARAMS: "ssl=true"
     ports:
-      - 8080:8080
+      - 8082:8080
     depends_on:
       - postgres

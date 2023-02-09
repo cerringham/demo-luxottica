@@ -8,4 +8,6 @@ import java.util.stream.Stream;
 public interface FhirService {
 
     public <T extends IBaseResource> Stream<Bundle.BundleEntryComponent> getStreamOfAll(Class<T> resourceClass);
+
+    public String toString(IBaseResource iBaseResource);
 }

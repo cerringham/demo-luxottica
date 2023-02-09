@@ -1,3 +1,4 @@
+/*
 package it.bitrock.demoluxottica.security;
 
 import org.springframework.context.annotation.Configuration;
@@ -6,3 +7,4 @@ import org.springframework.security.web.context.AbstractSecurityWebApplicationIn
 @Configuration
 public class SecurityWebApplicationInitializer extends AbstractSecurityWebApplicationInitializer {
 }
+*/

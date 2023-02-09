@@ -43,9 +43,10 @@ public class DiagnosticReportController {
         return ResponseEntity.status(404).build();
     }
 
-    @PostMapping
+    @PostMapping("/{id}")
     public ResponseEntity<String> saveDiagnosticReport(@PathVariable String id) {
-        if(service.getDiagnosticReportById(id).isPresent()){
+
+        if(service.saveDiagnosticReport(service.getDiagnosticReportById(id).get()).isPresent()){
             return ResponseEntity
                     .ok()
                     .body(FhirContextSettings

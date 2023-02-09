@@ -20,4 +20,9 @@ public class FhirServiceImpl implements FhirService {
         return bundle.getEntry().stream().
                 toList().stream();
     }
+
+
+    public String toString(IBaseResource iBaseResource){
+        return FhirContextSettings.getParser().encodeResourceToString(iBaseResource);
+    }
 }
