@@ -16,6 +16,11 @@ services:
 #      - SPRING_DATASOURCE_USERNAME=compose-postgres
 #      - SPRING_DATASOURCE_PASSWORD=compose-postgres
 #      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+  fhir_server:
+    container_name: fhir_server
+    image: polyakov/hapi-fhir-jpaserver-example
+    ports:
+      - 8083:8083
   postgres:
     container_name: postgres_db
     image: postgres
@@ -43,6 +48,6 @@ services:
       # It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
       #JDBC_PARAMS: "ssl=true"
     ports:
-      - 8082:8080
+      - 8080:8080
     depends_on:
       - postgres

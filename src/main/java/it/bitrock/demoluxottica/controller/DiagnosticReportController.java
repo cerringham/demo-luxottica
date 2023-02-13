@@ -45,7 +45,6 @@ public class DiagnosticReportController {
 
     @PostMapping("/{id}")
     public ResponseEntity<String> saveDiagnosticReport(@PathVariable String id) {
-
         if(service.saveDiagnosticReport(service.getDiagnosticReportById(id).get()).isPresent()){
             return ResponseEntity
                     .ok()
