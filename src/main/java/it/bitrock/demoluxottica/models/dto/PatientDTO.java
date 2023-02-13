@@ -28,7 +28,14 @@ public class PatientDTO {
     private LocalDateTime start;
     @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime end;
+    @Schema(example = "male")
+    private String gender;
+    @Schema(example = "2000/04/10")
+    private String birthDay;
 
-    //TODO ADD PARAMETER
+    private String city;
+    private String address;
+    private String addressNumber;
+    private String postalCode;
 
 }

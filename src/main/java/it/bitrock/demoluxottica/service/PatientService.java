@@ -7,6 +7,7 @@ import it.bitrock.demoluxottica.models.dto.PatientDTO;
 import it.bitrock.demoluxottica.models.enumerations.FhirContextEnum;
 import it.bitrock.demoluxottica.utils.FhirUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.r4.model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,15 +49,23 @@ public class PatientService {
 
         patient.addName(new HumanName()
                 .setFamily(patientDTO.getFamilyName())
-                .setGiven(Arrays.asList(new StringType(patientDTO.getGivenName()))));
+                .addGiven(patientDTO.getGivenName()));
+        addGender(patient, patientDTO.getGender());
+        addBirthDay(patient, patientDTO.getBirthDay());
 
         addTelecom(patient, patientDTO.getEmail(), patientDTO.getTelephone());
 
         addTreatment(patient, patientDTO.getStart(), patientDTO.getEnd());
 
-        //TODO ADD LOGIC
+        addAddress(patient, patientDTO.getCity(), patientDTO.getAddress(),
+                patientDTO.getAddressNumber(), patientDTO.getPostalCode());
 
-        Boolean created = FhirContextSettings.r4_client.create().resource(patient).execute().getCreated();
+
+        Boolean created = FhirContextSettings.r4_client.create()
+                .resource(patient)
+                .execute()
+                .getCreated();
+
         if (created == true) {
             log.info("Created in Fhir: {}, with ID: {}", true, patient.getId());
             return ResponseEntity.ok(FhirContextSettings.getParser().encodeResourceToString(patient));
@@ -67,7 +76,6 @@ public class PatientService {
     }
 
     public ResponseEntity<?> addPatient() {
-
         Patient patient = new Patient();
 
         patient.setId(String.valueOf(UUID.randomUUID()));
@@ -78,6 +86,11 @@ public class PatientService {
         patient.addName(new HumanName()
                 .setFamily(new Faker().name().lastName())
                 .setGiven(Arrays.asList(new StringType(new Faker().name().firstName()))));
+        addGender(patient, "male");
+        addBirthDay(patient, "2020/01/01");
+
+        addAddress(patient, "New York", "Liberty Street",
+                "30", "003456");
 
         addTelecom(patient, "esempio@libero.it", "+39 55534590");
 
@@ -102,13 +115,29 @@ public class PatientService {
         }
     }
 
-    private void addTelecom(Patient patient, String email, String telephone) {
-        patient.addTelecom(new ContactPoint()
-                .setValue(new Faker().expression(email))
-                .setSystem(ContactPoint.ContactPointSystem.EMAIL));
-        patient.addTelecom(new ContactPoint()
-                .setValue(new Faker().expression(telephone))
-                .setSystem(ContactPoint.ContactPointSystem.PHONE));
+    private void addTelecom(Patient patient, String... values) {
+        for (String value : values) {
+            if (value.contains("@") && value.contains(".")) {
+                patient.addTelecom(new ContactPoint()
+                        .setValue(new Faker().expression(value))
+                        .setSystem(ContactPoint.ContactPointSystem.EMAIL));
+            } else if (value.matches("[0-9]+")) {
+                patient.addTelecom(new ContactPoint()
+                        .setValue(new Faker().expression(value))
+                        .setUse(ContactPoint.ContactPointUse.MOBILE)
+                        .setSystem(ContactPoint.ContactPointSystem.PHONE));
+            } else {
+                log.info("Wrong value");
+            }
+        }
+    }
+
+    private void addAddress(Patient patient, String city, String address, String addressNum, String postalCode){
+        patient.addAddress().setCity(city).addLine(address).addLine(addressNum).setPostalCode(postalCode);
+    }
+
+    private void addBirthDay(Patient patient, String birthDay) {
+        patient.getBirthDateElement().setValueAsString(birthDay);
     }
 
     private void addTreatment(Patient patient, LocalDateTime start, LocalDateTime end) {
@@ -117,6 +146,17 @@ public class PatientService {
                 .setValue(new Period()
                         .setStart(Date.from(start.atZone(ZoneId.systemDefault()).toInstant()))
                         .setEnd(Date.from(end.atZone(ZoneId.systemDefault()).toInstant())));
+    }
+
+    private void addGender(Patient patient, String gender){
+        switch (gender.toLowerCase()) {
+            case "male": patient.setGender(Enumerations.AdministrativeGender.MALE);
+            case "m": patient.setGender(Enumerations.AdministrativeGender.MALE); break;
+            case "female": patient.setGender(Enumerations.AdministrativeGender.FEMALE);
+            case "f": patient.setGender(Enumerations.AdministrativeGender.FEMALE); break;
+            case "i don't know": patient.setGender(Enumerations.AdministrativeGender.OTHER);
+            case "i can't identify myself whit something strange like sex": patient.setGender(Enumerations.AdministrativeGender.OTHER); break;
+        }
     }
 
 }
