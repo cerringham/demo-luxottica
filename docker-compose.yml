@@ -115,8 +115,10 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgres
       FHIR_HOST: http://fhir:8080/fhir
-      KAFKA_BOOTSTRAP-SERVERS: broker:29092
-      KAFKA_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      SPRING_KAFKA_BOOTSTRAP-SERVERS: broker:29092
+      SPRING_KAFKA_PRODUCER_KEY_SERIALIZER: org.apache.kafka.common.serialization.StringSerializer
+      SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER: io.confluent.kafka.serializers.KafkaAvroSerializer
+      SPRING_KAFKA_PRODUCER_PROPERTIES_SCHEMA_REGISTRY_URL: http://schema-registry:8081
       KEYCLOAK_CLIENT_ID: BE-KEYCLOAK-GATEWAY-SERVICE
       KEYCLOAK_SERVER: http://keycloak:8080/auth
       KEYCLOAK_CLIENT_SECRET: "**********"

@@ -1,5 +1,5 @@
 {
-  "namespace": "it.bitrock.demoluxottica.model.avro",
+  "namespace": "it.bitrock.demoluxottica.models.avro",
   "type": "record",
   "name": "PatientRecord",
   "fields": [
