@@ -33,13 +33,6 @@ services:
     image: "hapiproject/hapi:latest"
     ports:
       - "8080:8080"
-#    environment:
-#      SPRING_DATASOURCE_URL: 'jdbc:postgresql://postgres:5432/fhir'
-#      SPRING_DATASOURCE_USERNAME: postgres
-#      SPRING_DATASOURCE_PASSWORD: postgres
-#      SPRING_DATASOURCE_DRIVER-CLASS-NAME: org.postgresql.Driver
-#      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
-#      SPRING_JPA_PROPERTIES_HIBERNATE_SEARCH_ENABLED: 'false'
     depends_on:
       - postgres
 
