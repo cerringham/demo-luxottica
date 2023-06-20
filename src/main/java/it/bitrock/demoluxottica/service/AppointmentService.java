@@ -2,24 +2,24 @@ package it.bitrock.demoluxottica.service;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import lombok.extern.slf4j.Slf4j;
 import org.hl7.fhir.r4.model.Appointment;
 import org.hl7.fhir.r4.model.Meta;
 import org.hl7.fhir.r4.model.Reference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 
 @Service
-@Slf4j
 public class AppointmentService {
+    private static final Logger log = LoggerFactory.getLogger(AppointmentService.class);
 
     private FhirContext ctx = FhirContext.forR4();
     private final String url = "https://hapi.fhir.org/baseR4";
@@ -28,7 +28,6 @@ public class AppointmentService {
     }
 
     public ResponseEntity<?> addAppointment(Appointment appointment){
-
         // Set the relevant details for the appointment
         appointment.setDescription("eye injuries");
         appointment.setStatus(Appointment.AppointmentStatus.BOOKED);

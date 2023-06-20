@@ -1,0 +1,54 @@
+{
+  "namespace": "it.bitrock.demoluxottica.model.avro",
+  "type": "record",
+  "name": "PatientRecord",
+  "fields": [
+    {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "firstName",
+      "type": "string"
+    },
+    {
+      "name": "lastName",
+      "type": "string"
+    },
+    {
+      "name": "birthDate",
+      "type": "long",
+      "logicalType": "date"
+    },
+    {
+      "name": "phoneNumber",
+      "type": ["null", "string"],
+      "default": null
+    },
+    {
+      "name": "email",
+      "type": ["null", "string"],
+      "default": null
+    },
+    {
+      "name": "addressCountry",
+      "type": "string"
+    },
+    {
+      "name": "addressDistrict",
+      "type": "string"
+    },
+    {
+      "name": "addressCity",
+      "type": "string"
+    },
+    {
+      "name": "addressStreet",
+      "type": "string"
+    },
+    {
+      "name": "addressNumber",
+      "type": "string"
+    }
+  ]
+}

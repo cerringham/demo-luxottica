@@ -1,34 +1,64 @@
 version: '3'
 
-volumes:
-  postgres_data:
-    driver: local
-
 services:
   postgres:
     image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./sql/create_dbs.sql:/docker-entrypoint-initdb.d/create_dbs.sql
+
+  pgadmin:
+    image: dpage/pgadmin4:7.3
+    depends_on:
+      - postgres
+    ports:
+      - "5433:80"
     environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: password
+      PGADMIN_DEFAULT_EMAIL: "mirco.romagnoli@bitrock.it"
+      PGADMIN_DEFAULT_PASSWORD: "default_psw"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - 'pgadmin_vol:/pgadmin4'
+
+
   keycloak:
     image: quay.io/keycloak/keycloak:legacy
     environment:
       DB_VENDOR: POSTGRES
       DB_ADDR: postgres
       DB_DATABASE: keycloak
-      DB_USER: keycloak
+      DB_USER: postgres
       DB_SCHEMA: public
-      DB_PASSWORD: password
+      DB_PASSWORD: postgres
       KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: Pa55w0rd
-      # Uncomment the line below if you want to specify JDBC parameters.
-      # The parameter below is just an example, and it shouldn't be used in production without knowledge.
-      # It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
-      #JDBC_PARAMS: "ssl=true"
+      KEYCLOAK_PASSWORD: admin
     ports:
-      - 8080:8080
+      - "8084:8080"
     depends_on:
       - postgres
+
+  fhir:
+    image: "hapiproject/hapi:latest"
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://postgres:5432/fhir'
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_DATASOURCE_DRIVER-CLASS-NAME: org.postgresql.Driver
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+      SPRING_JPA_PROPERTIES_HIBERNATE_SEARCH_ENABLED: 'false'
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_vol:
+    driver: local
