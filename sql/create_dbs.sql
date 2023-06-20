@@ -1,3 +1,3 @@
 CREATE DATABASE keycloak;
 CREATE DATABASE fhir;
-CREATE DATABASE fhir-spike;
+CREATE DATABASE demoluxottica;
