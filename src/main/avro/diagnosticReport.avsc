@@ -1,0 +1,36 @@
+{
+  "namespace": "it.bitrock.demoluxottica.models.avro",
+  "type": "record",
+  "name": "DiagnosticReportRecord",
+  "fields": [
+    {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "status",
+      "type": "string"
+    },
+    {
+      "name": "code",
+      "type": "string"
+    },
+    {
+      "name": "subject",
+      "type": "string"
+    },
+    {
+      "name": "encounter",
+      "type": "string"
+    },
+    {
+      "name": "effectiveDateTime",
+      "type": "long",
+      "logicalType": "date"
+    },
+    {
+      "name": "performers",
+      "type": "string"
+    }
+  ]
+}

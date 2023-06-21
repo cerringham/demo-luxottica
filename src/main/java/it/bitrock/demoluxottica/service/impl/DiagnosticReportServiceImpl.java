@@ -5,14 +5,13 @@ import javax.ws.rs.NotFoundException;
 import java.util.Optional;
 
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.gclient.IClientExecutable;
 import it.bitrock.demoluxottica.integration.kafka.producer.ProducerDiagnosticReportService;
 import it.bitrock.demoluxottica.mapper.DiagnosticReportMapper;
 import it.bitrock.demoluxottica.models.dto.DiagnosticReportDTO;
 import it.bitrock.demoluxottica.service.DiagnosticReportService;
 import org.hl7.fhir.r4.model.DiagnosticReport;
 import org.springframework.stereotype.Service;
-
-import io.vavr.control.Try;
 
 @Service
 public class DiagnosticReportServiceImpl implements DiagnosticReportService {
@@ -31,7 +30,7 @@ public class DiagnosticReportServiceImpl implements DiagnosticReportService {
                 .filter(i -> !i.isEmpty())
                 .map(r -> fhirClient.read().resource(DiagnosticReport.class))
                 .map(r -> r.withId(id))
-                .map(r -> Try.of(r::execute).getOrElseThrow(() -> new NotFoundException()))
+                .map(IClientExecutable::execute)
                 .map(d -> {
                     producerDiagnosticReportService.findDiagnosticRecordById(d);
                     return mapper.mapDiagnosticReport(d);

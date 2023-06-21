@@ -2,18 +2,16 @@ package it.bitrock.demoluxottica.controller;
 
 import it.bitrock.demoluxottica.models.enumerations.FhirContextEnum;
 import it.bitrock.demoluxottica.service.PatientService;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @CrossOrigin(origins = "*")
-@Slf4j
 @RestController
 @RequestMapping("/patient")
 public class PatientController {
 
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(PatientController.class);
     @Autowired
     PatientService service;
 
