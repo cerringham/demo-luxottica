@@ -7,7 +7,11 @@ Open a terminal or command prompt and navigate to the project's root directory:
 ```bash
 cd demo-luxottica
 ```
-Start the services using Docker Compose:
+First of all, you have to install the project (:
+```bash
+mvn install -DskipTests
+```
+Then, you can start the services using Docker Compose:
 
 ```bash
 docker-compose up -d
